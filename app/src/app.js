@@ -13,7 +13,7 @@ writableStream.on("finish", function(){
 });
 
 var dataArr = [];
-fs.createReadStream('app/listAbo.csv')
+fs.createReadStream('listAbo.csv')
     .pipe(csv())
     .on('data', function(data){
         dataArr.push(data); // Add a row
@@ -46,7 +46,7 @@ on en crée une vide sous forme d'array avant la suite */
     dataArr.push([req.body.newAboFirstName,req.body.newAboLastName,req.body.newAboAddress,req.body.newAboPseudo,req.body.newAboEmail]);
     //console.log(dataArr);
     csv
-        .writeToPath("app/listAbo.csv",dataArr, {headers: false})
+        .writeToPath("listAbo.csv",dataArr, {headers: false})
    .on("finish", function(){
       console.log("done!");
    });
@@ -60,7 +60,7 @@ on en crée une vide sous forme d'array avant la suite */
   if (req.params.id == 'all') {
     dataArr=[];
     csv
-        .writeToPath("app/listAbo.csv",dataArr, {headers: false})
+        .writeToPath("listAbo.csv",dataArr, {headers: false})
    .on("finish", function(){
       console.log("done!");
    });
@@ -69,7 +69,7 @@ on en crée une vide sous forme d'array avant la suite */
     else if (req.params.id != ''){
     dataArr.splice(req.params.id-1, 1);
     csv
-        .writeToPath("app/listAbo.csv",dataArr, {headers: false})
+        .writeToPath("listAbo.csv",dataArr, {headers: false})
    .on("finish", function(){
       console.log("done!");
    });
