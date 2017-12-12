@@ -1,0 +1,20 @@
+body{
+	color : black;
+	overflow-x : hidden;
+
+	h1{
+		font-size: 2em;
+	}
+
+	.row{
+
+		div{
+			text-align: left;
+		}
+
+		a, #abonnes{
+			margin-bottom: 30px;
+			text-decoration: none;
+		}
+	}
+}
