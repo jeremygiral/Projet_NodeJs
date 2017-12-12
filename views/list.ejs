@@ -12,7 +12,7 @@
 <body>
 
   <h1>Mes abonnés</h1>
-  <a href="" onclick="javascript:visibilite('abonnes'); return false;" >Show list of followers</a>
+  <a href="" onclick="javascript:visibilite('abonnes'); return false;" id="buttonShow" >Show list of followers</a>
   <div id="abonnes" style="display:none;">
     <table>
       <tr><th> </th><th>First Name</th><th>Last Name</th><th>Adress</th><th>Pseudo</th><th>Email</th></tr>
@@ -46,12 +46,13 @@
     {
       var targetElement;
       targetElement = document.getElementById(thingId) ;
+      showButton = document.getElementById("buttonShow") ;
       if (targetElement.style.display == "none")
       {
-        targetElement.innerHTML="Show list of followers";
+        showButton.innerHTML="Hide list of followers";
         targetElement.style.display = "" ;
       } else {
-        targetElement.innerHTML="Hide list of followers";
+        showButton.innerHTML="Show list of followers";
         targetElement.style.display = "none" ;
       }
     }
