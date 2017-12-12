@@ -50,6 +50,7 @@ on en crée une vide sous forme d'array avant la suite */
    .on("finish", function(){
       console.log("done!");
    });
+   alert("Follower added.");
   }
   res.redirect('/list');
 })
@@ -63,6 +64,7 @@ on en crée une vide sous forme d'array avant la suite */
    .on("finish", function(){
       console.log("done!");
    });
+   alert("All followers have been delete.");
   }
     else if (req.params.id != ''){
     dataArr.splice(req.params.id-1, 1);
@@ -71,6 +73,7 @@ on en crée une vide sous forme d'array avant la suite */
    .on("finish", function(){
       console.log("done!");
    });
+   alert("The follower has been delete.");
   }
   res.redirect('/list');
 })
