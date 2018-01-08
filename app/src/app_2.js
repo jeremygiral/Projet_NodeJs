@@ -41,7 +41,6 @@ myRouter.route('/')
 
  
 var adresseSchema=mongoose.Schema({
-   ID_ADRESSE: Number identity(1,1),
    CD_CODE_POSTAL: String,
    LB_VILLE: String,
    LB_PAYS: String,
@@ -53,7 +52,6 @@ var adresseSchema=mongoose.Schema({
 });
 var Adresse=mongoose.model('Adresse',adresseSchema)
 var groupeSchema=mongoose.Schema({
-   ID_GROUPE: Number identity(1,1),
    LB_NOM: String,
    LB_DESC: String
 });
@@ -62,7 +60,6 @@ var Groupe=mongoose.model('Groupe',groupeSchema)
 /* Table : USER                                                 */
 /*==============================================================*/
 var userSchema=mongoose.Schema({
-   ID_USER: Number identity(1,1),
    LB_NOM: String,
    LB_PRENOM: String,
    DT_NAISSANCE: Date,
@@ -71,13 +68,13 @@ var userSchema=mongoose.Schema({
 });
 var User=mongoose.model('User',userSchema)
 var usergroupeSchema=mongoose.Schema({
-   ID_USER: Number,
-   ID_GROUPE: Number
+   ID_USER: Schema.ObjectId,
+   ID_GROUPE: Schema.ObjectId
 });
 var User=mongoose.model('UserGroupe',usergroupeSchema)
 var usergroupeSchema=mongoose.Schema({
-   ID_USER: Number,
-   ID_ADRESSE: Number,
+   ID_USER: Schema.ObjectId,
+   ID_ADRESSE: Schema.ObjectId,
    IS_LIVRAISON: Boolean});
 var User=mongoose.model('UserGroupe',usergroupeSchema)
 
@@ -99,7 +96,6 @@ myRouter.route('/adresses')
     // Nous utilisons le schéma Piscine
       var adresse = new Adresse();
     // Nous récupérons les données reçues pour les ajouter à l'objet Piscine
-      adresse.ID_ADRESSE = req.body.ID_ADRESSE;
       adresse.CD_CODE_POSTAL = req.body.CD_CODE_POSTAL;
       adresse.LB_VILLE = req.body.LB_VILLE;
       adresse.LB_PAYS = req.body.LB_PAYS; 
@@ -133,7 +129,6 @@ myRouter.route('/adresses/:ID_ADRESSE')
                 if (err){
                     res.send(err);
                 }
-                              adresse.ID_ADRESSE = req.body.ID_ADRESSE;
 						      adresse.CD_CODE_POSTAL = req.body.CD_CODE_POSTAL;
 						      adresse.LB_VILLE = req.body.LB_VILLE;
 						      adresse.LB_PAYS = req.body.LB_PAYS; 
@@ -152,11 +147,140 @@ myRouter.route('/adresses/:ID_ADRESSE')
 })
 .delete(function(req,res){ 
  
-    Adresse.remove({ID_ADRESSE: req.params.ID_ADRESSE}, function(err, adresse){
+    Adresse.remove({_id: req.params.ID_ADRESSE}, function(err, adresse){
         if (err){
             res.send(err); 
         }
         res.json({message:"Bravo, adresse supprimée"}); 
+    }); 
+    
+});
+
+myRouter.route('/users')
+
+.get(function(req,res){ 
+    User.find(function(err, users){
+        if (err){
+            res.send(err); 
+        }
+        res.json(users); 
+        
+    })
+}) // SUITE DU CODE
+
+.post(function(req,res){
+    // Nous utilisons le schéma Piscine
+      var user = new User();
+    // Nous récupérons les données reçues pour les ajouter à l'objet Piscine
+      user.LB_NOM = req.body.LB_NOM;
+      user.LB_PRENOM = req.body.LB_PRENOM;
+      user.DT_NAISSANCE = req.body.DT_NAISSANCE;
+      user.LOGIN = req.body.LOGIN; 
+      user.PASSWORD = req.body.PASSWORD;
+    //Nous stockons l'objet en base
+      user.save(function(err){
+        if(err){
+          res.send(err);
+        }
+        res.send({message : 'Bravo, l\'utilisateur est maintenant stockée en base de données'});
+      })
+})
+
+
+myRouter.route('/users/:ID_USER')
+.get(function(req,res){ 
+            User.findById(req.params.ID_USER, function(err, user) {
+            if (err)
+                res.send(err);
+            res.json(user);
+        });
+})
+.put(function(req,res){ 
+                User.findById(req.params.ID_USER, function(err, user) {
+                if (err){
+                    res.send(err);
+                }
+                              user.LB_NOM = req.body.LB_NOM;
+						      user.LB_PRENOM = req.body.LB_PRENOM;
+						      user.DT_NAISSANCE = req.body.DT_NAISSANCE;
+						      user.LOGIN = req.body.LOGIN; 
+						      user.PASSWORD = req.body.PASSWORD;
+                              user.save(function(err){
+                                if(err){
+                                  res.send(err);
+                                }
+                                res.json({message : 'Bravo, mise à jour des données OK'});
+                              });                
+                });
+})
+.delete(function(req,res){ 
+ 
+    User.remove({_id: req.params.ID_USER}, function(err, user){
+        if (err){
+            res.send(err); 
+        }
+        res.json({message:"Bravo, utilisateur supprimé"}); 
+    }); 
+    
+});
+
+myRouter.route('/groupes')
+
+.get(function(req,res){ 
+    Groupe.find(function(err, groupes){
+        if (err){
+            res.send(err); 
+        }
+        res.json(groupes); 
+        
+    })
+}) // SUITE DU CODE
+
+.post(function(req,res){
+    // Nous utilisons le schéma Piscine
+      var groupe = new Groupe();
+    // Nous récupérons les données reçues pour les ajouter à l'objet Piscine
+      groupe.LB_NOM = req.body.LB_NOM;
+      groupe.LB_DESC = req.body.LB_DESC;
+      //Nous stockons l'objet en base
+      groupe.save(function(err){
+        if(err){
+          res.send(err);
+        }
+        res.send({message : 'Bravo, le groupe est maintenant stocké en base de données'});
+      })
+})
+
+myRouter.route('/groupes/:ID_GROUPE')
+.get(function(req,res){ 
+            Groupe.findById(req.params.ID_GROUPE, function(err, groupe) {
+            if (err)
+                res.send(err);
+            res.json(groupe);
+        });
+})
+.put(function(req,res){ 
+                Groupe.findById(req.params.ID_GROUPE, function(err, groupe) {
+                if (err){
+                    res.send(err);
+                }
+                    		  groupe.LB_NOM = req.body.LB_NOM;
+     				 		  groupe.LB_DESC = req.body.LB_DESC;
+                              groupe.save(function(err){
+                                if(err){
+                                  res.send(err);
+                                }
+                                res.json({message : 'Bravo, mise à jour des données OK'});
+                              });                
+                });
+})
+.delete(function(req,res){ 
+ 
+    Groupe.remove({_id: req.params.ID_GROUPE}, function(err, groupe){
+        if (err){
+            res.send(err); 
+        }
+        res.json({message:"Bravo, groupe supprimé"}); 
     }); 
     
 });
