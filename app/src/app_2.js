@@ -119,52 +119,30 @@ myRouter.route('/adresses')
       })
 })
 
-myRouter.route('/')
-.all(function(req,res){ 
-      res.json({message : "Bienvenue sur notre Frugal API ", methode : req.method});
-});
-  
-myRouter.route('/piscines')
+
+myRouter.route('/adresses/:ID_ADRESSE')
 .get(function(req,res){ 
-	Piscine.find(function(err, piscines){
-        if (err){
-            res.send(err); 
-        }
-        res.json(piscines);  
-    }); 
-})
-.post(function(req,res){
-      var piscine = new Piscine();
-      piscine.nom = req.body.nom;
-      piscine.adresse = req.body.adresse;
-      piscine.tel = req.body.tel;
-      piscine.description = req.body.description; 
-      piscine.save(function(err){
-        if(err){
-          res.send(err);
-        }
-        res.json({message : 'Bravo, la piscine est maintenant stockée en base de données'});
-      }); 
-}); 
- 
-myRouter.route('/piscines/:piscine_id')
-.get(function(req,res){ 
-            Piscine.findById(req.params.piscine_id, function(err, piscine) {
+            Adresse.findById(req.params.ID_ADRESSE, function(err, adresse) {
             if (err)
                 res.send(err);
-            res.json(piscine);
+            res.json(adresse);
         });
 })
 .put(function(req,res){ 
-                Piscine.findById(req.params.piscine_id, function(err, piscine) {
+                Adresse.findById(req.params.ID_ADRESSE, function(err, adresse) {
                 if (err){
                     res.send(err);
                 }
-                        piscine.nom = req.body.nom;
-                        piscine.adresse = req.body.adresse;
-                        piscine.tel = req.body.tel;
-                        piscine.description = req.body.description; 
-                              piscine.save(function(err){
+                              adresse.ID_ADRESSE = req.body.ID_ADRESSE;
+						      adresse.CD_CODE_POSTAL = req.body.CD_CODE_POSTAL;
+						      adresse.LB_VILLE = req.body.LB_VILLE;
+						      adresse.LB_PAYS = req.body.LB_PAYS; 
+						      adresse.LB_REGION = req.body.LB_REGION;
+						      adresse.LB_RUE = req.body.LB_RUE;
+						      adresse.NUM_RUE = req.body.NUM_RUE;
+						      adresse.MT_LONGITUDE = req.body.MT_LONGITUDE;
+						      adresse.MT_LATITUDE = req.body.MT_LATITUDE; 
+                              adresse.save(function(err){
                                 if(err){
                                   res.send(err);
                                 }
@@ -174,11 +152,11 @@ myRouter.route('/piscines/:piscine_id')
 })
 .delete(function(req,res){ 
  
-    Piscine.remove({_id: req.params.piscine_id}, function(err, piscine){
+    Adresse.remove({ID_ADRESSE: req.params.ID_ADRESSE}, function(err, adresse){
         if (err){
             res.send(err); 
         }
-        res.json({message:"Bravo, piscine supprimée"}); 
+        res.json({message:"Bravo, adresse supprimée"}); 
     }); 
     
 });
