@@ -54,7 +54,7 @@
 	var Adresse=mongoose.model('Adresse',adresseSchema)
 
 	var groupeSchema=mongoose.Schema({
-	   LB_NOM: String,
+	   LB_NOM_GROUPE: String,
 	   LB_DESC: String
 	});
 	var Groupe=mongoose.model('Groupe',groupeSchema)
@@ -67,7 +67,7 @@
 	var userSchema=mongoose.Schema({
 	   LB_NOM: String,
 	   LB_PRENOM: String,
-	   DT_NAISSANCE: Date,
+	   DT_NAISSANCE: String,
 	   LOGIN: String,
 	   PASSWORD: String,
 	   ADRESSES: [{type: mongoose.Schema.ObjectId, ref: 'Adresse'}],
@@ -101,6 +101,7 @@
 	      user.DT_NAISSANCE = req.body.DT_NAISSANCE;
 	      user.LOGIN = req.body.LOGIN; 
 	      user.PASSWORD = req.body.PASSWORD;
+	      user.STATUS = req.body.STATUS;
 	      //user.GROUPES = req.body.GROUPES;
 	      //user.ADRESSES=req.body.ADRESSES;
 	    //Nous stockons l'objet en base
@@ -110,48 +111,37 @@
 			        }
 			           	var adresse = new Adresse();
 			    // Nous récupérons les données reçues pour les ajouter à l'objet Piscine
-					      adresse.CD_CODE_POSTAL = req.body.CD_CODE_POSTAL;
-					      adresse.LB_VILLE = req.body.LB_VILLE;
-					      adresse.LB_PAYS = req.body.LB_PAYS; 
-					      adresse.LB_REGION = req.body.LB_REGION;
-					      adresse.LB_RUE = req.body.LB_RUE;
-					      adresse.NUM_RUE = req.body.NUM_RUE;
-					      adresse.MT_LONGITUDE = req.body.MT_LONGITUDE;
-					      adresse.MT_LATITUDE = req.body.MT_LATITUDE; 
-					      adresse._id = new ObjectId();
-					      if(req.body.ADRESSES.isValid){
-			           	 	user.update({_id:user._id},{ $push: { ADRESSES: adresse._id } },function(err){
-				        		if(err){
-				        			res.send(err);
-				        		}
-				        		
-				        	})
-			           }
-			           else
-			           {
-			           
+					      adresse.CD_CODE_POSTAL = req.body.ADRESSES.CD_CODE_POSTAL;
+					      adresse.LB_VILLE = req.body.ADRESSES.LB_VILLE;
+					      adresse.LB_PAYS = req.body.ADRESSES.LB_PAYS; 
+					      adresse.LB_REGION = req.body.ADRESSES.LB_REGION;
+					      adresse.LB_RUE = req.body.ADRESSES.LB_RUE;
+					      adresse.NUM_RUE = req.body.ADRESSES.NUM_RUE;
+					      adresse.MT_LONGITUDE = req.body.ADRESSES.MT_LONGITUDE;
+					      adresse.MT_LATITUDE = req.body.ADRESSES.MT_LATITUDE; 
 					      adresse.save(function(err,adresse){
 					      	if(err){
 				          		res.send(err);
 				        	}
-				        	user.update({_id:user._id},{ $push: { ADRESSES: adresse._id } },function(err){
+				        	User.update({_id: user._id},{ $push: { ADRESSES: adresse._id } },function(err){
 				        		if(err){
 				        			res.send(err);
+				        			
 				        		}
 				        		
 				        	})
 				        	
 
 					      })
-					    }
+					    
 	      	var groupe = new Groupe();
-	      	groupe.LB_NOM=req.body.LB_NOM;
+	      	groupe.LB_NOM_GROUPE=req.body.LB_NOM_GROUPE;
 	      	groupe.LB_DESC=req.body.LB_DESC;
 	      	groupe.save(function(err,groupe){
 	      		if(err){
 	      			res.send(err);
 	      		}
-	      	user.update({_id:user._id},{$push: {GROUPES: groupe._id}},function(err){
+	      	User.update({_id: user._id},{$push: {GROUPES: groupe._id}},function(err){
 	      		if(err){
 	      			res.send(err);
 	      		}
@@ -181,6 +171,7 @@
 			      user.DT_NAISSANCE = new Date(req.body.DT_NAISSANCE);
 			      user.LOGIN = req.body.LOGIN; 
 			      user.PASSWORD = req.body.PASSWORD;
+			      user.STATUS = req.body.STATUS;
 			      user.save(function(err,user){
 			        if(err){
 			          res.send(err);
@@ -195,23 +186,11 @@
 					      adresse.NUM_RUE = req.body.NUM_RUE;
 					      adresse.MT_LONGITUDE = req.body.MT_LONGITUDE;
 					      adresse.MT_LATITUDE = req.body.MT_LATITUDE; 
-					      adresse._id = new ObjectId();
-					      if(req.body.ADRESSES.isValid){
-			           	 	user.update({_id:user._id},{ $push: { ADRESSES: adresse._id } },function(err){
-				        		if(err){
-				        			res.send(err);
-				        		}
-				        		
-				        	})
-			           }
-			           else
-			           {
-			           
 					      adresse.save(function(err,adresse){
 					      	if(err){
 				          		res.send(err);
 				        	}
-				        	user.update({_id:user._id},{ $push: { ADRESSES: adresse._id } },function(err){
+				        	User.update({_id: user._id},{ $push: { ADRESSES: adresse._id } },function(err){
 				        		if(err){
 				        			res.send(err);
 				        		}
@@ -220,15 +199,15 @@
 				        	
 
 					      })
-					    }
+					    
 			      	var groupe = new Groupe();
-			      	groupe.LB_NOM=req.body.LB_NOM;
+			      	groupe.LB_NOM_GROUPE=req.body.LB_NOM_GROUPE;
 			      	groupe.LB_DESC=req.body.LB_DESC;
 			      	groupe.save(function(err,groupe){
 			      		if(err){
 			      			res.send(err);
 			      		}
-			      	user.update({_id:user._id},{$push: {GROUPES: groupe._id}},function(err){
+			      	User.update({_id: user._id},{$push: {GROUPES: groupe._id}},function(err){
 			      		if(err){
 			      			res.send(err);
 			      		}
@@ -394,4 +373,4 @@
 	app.listen(port, hostname, function(){
 		console.log("Mon serveur fonctionne sur http://"+ hostname +":"+port); 
 	});
-	 
+	
