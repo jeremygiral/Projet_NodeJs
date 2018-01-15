@@ -7,7 +7,9 @@ require('dotenv').config()
 // Nous définissons ici les paramètres du serveur.
 var hostname = 'localhost';
 var port = 3000;
-var bcrypt = require('bcryptjs');
+var bcrypt = require('bcrypt');
+
+var salt = bcrypt.genSaltSync(10);
 // La variable mongoose nous permettra d'utiliser les fonctionnalités du module mongoose.
 var mongoose = require('mongoose'),
 Schema = mongoose.Schema,
@@ -122,12 +124,14 @@ var userSchema=mongoose.Schema({
 				var adresse=new Adresse();
 				var groupe= new Groupe();
 				// Nous récupérons les données reçues pour les ajouter à l'objet user
+				var passwordToSave = bcrypt.hashSync(req.body.password, salt);
 				user.name = req.body.name;
 				user.surname = req.body.surname;
 				user.email=req.body.email;
 				user.birthday = req.body.birthday;
 				user.login = req.body.login;
 				user.password = req.body.password;
+				user.password = passwordToSave;
 				user.status = req.body.status;
 				user.isValable=true;
 				user.save(function(err,user){
