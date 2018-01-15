@@ -19,10 +19,11 @@ var options = { server: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 
 replset: { socketOptions: { keepAlive: 300000, connectTimeoutMS : 30000 } } };
 
 //URL de notre base
-var urlmongo = "mongodb://sa:password@ds247357.mlab.com:47357/projet_ynov_nodejs";
+
 
 // Nous connectons l'API à notre base de données
 //mongoose.connect("mongodb://"+process.env.DB_USER+":"+process.env.DB_PASS+"@"+process.env.DB_HOST+"/projet_ynov_nodejs",options);
+var urlmongo = "mongodb://sa:password@ds247357.mlab.com:47357/projet_ynov_nodejs";
 mongoose.connect(urlmongo,options);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Erreur lors de la connexion'));
@@ -141,7 +142,7 @@ var userSchema=mongoose.Schema({
 					else {
 						// Nous récupérons les données reçues pour les ajouter à l'objet user
 
-						//adresse._id=mongoose.Types.ObjectId();
+						adresse._id=mongoose.Types.ObjectId();
 						adresse.postalCode = req.body.adresses.postalCode;
 						adresse.city = req.body.adresses.city;
 						adresse.country = req.body.adresses.country;
@@ -206,12 +207,14 @@ var userSchema=mongoose.Schema({
 				var adresse=new Adresse();
 				var groupe= new Groupe();
 				// Nous récupérons les données reçues pour les ajouter à l'objet user
+				var passwordToSave = bcrypt.hashSync(req.body.password, salt);
 				user.name = req.body.name;
 				user.surname = req.body.surname;
 				user.email=req.body.email;
 				user.birthday = req.body.birthday;
 				user.login = req.body.login;
 				user.password = req.body.password;
+				user.password = passwordToSave;
 				user.status = req.body.status;
 				user.isValable=true;
 				user.save(function(err,user){
@@ -284,6 +287,7 @@ var userSchema=mongoose.Schema({
 			}
 			user.isValable=false;
 			user.save();
+			res.json({message:"Bravo, utilisateur désactivé"});
 		})
 	})
 
@@ -298,8 +302,8 @@ var userSchema=mongoose.Schema({
 	})
 	function FindAll(NB, callback){
 		var finalJSON=[];
-
-		User.find().limit(parseInt(NB)).exec(function (err, users) {
+		var nombre=NB>10 ? 10 : NB;
+		User.find().limit(parseInt(nombre)).exec(function (err, users) {
 			if (err) return handleError(err);
 			callback(users);
 		});
