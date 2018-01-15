@@ -6,9 +6,10 @@ var mongoose = require('mongoose'),
     relationship = require("mongoose-relationship");
 
 var groupeSchema=mongoose.Schema({
-	LB_NOM_GROUPE: String,
-	LB_DESC: String,
-	users: [{ type:Schema.ObjectId, ref:"User"}]
+	groupname: String,
+	description: String,
+	users: [{ type:Schema.ObjectId, ref:"User"}],
+  isvalable: Boolean
 });
 var Groupe=mongoose.model('Groupe',groupeSchema)
 
